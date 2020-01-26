@@ -9,6 +9,7 @@ LICENSE, which you should have received as part of this distribution.
 #define LOGBOOK_APPENDER_OSTREAM_H_
 
 #include <logbook/Appender.h>
+#include <logbook/Location.h>
 #include <logbook/Level.h>
 #include <string>
 #include <ostream>
@@ -25,8 +26,8 @@ public:
 	std::ostream& oStreamError);
 
 protected:
-	void flushNewLine(const Id& id, bool enabled) override;
-	void write(const Id& id, bool enabled, const char* ptr, std::size_t size) override;
+	void flushNewLine(const Location& location, bool enabled) override;
+	void write(const Location& location, bool enabled, const char* ptr, std::size_t size) override;
 
 private:
 	std::ostream& getOStream(Level level);

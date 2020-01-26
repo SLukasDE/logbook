@@ -8,7 +8,7 @@ LICENSE, which you should have received as part of this distribution.
 #ifndef LOGBOOK_STREAMWRITER_H_
 #define LOGBOOK_STREAMWRITER_H_
 
-#include <logbook/Id.h>
+#include <logbook/Location.h>
 #include <ostream>
 
 namespace logbook {
@@ -31,11 +31,11 @@ public:
 	Writer& operator<<(std::ostream& (*pf)(std::ostream&));
 
 private:
-	Writer(Id* id, std::ostream& oStream);
+	Writer(Location* location, std::ostream& oStream);
 	Writer(Writer&& streamWriter);
 
     bool doUnlock;
-    Id* id;
+    Location* location;
     std::ostream& oStream;
 };
 

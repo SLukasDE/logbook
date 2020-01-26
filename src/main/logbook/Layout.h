@@ -8,7 +8,7 @@ LICENSE, which you should have received as part of this distribution.
 #ifndef LOGBOOK_LAYOUT_H_
 #define LOGBOOK_LAYOUT_H_
 
-#include <logbook/Id.h>
+#include <logbook/Location.h>
 #include <string>
 
 namespace logbook {
@@ -42,7 +42,7 @@ public:
 	bool getShowThreadNo() const;
 	void setShowThreadNo(bool showThreadNo = true);
 
-	std::string makePrefix(const Id& id);
+	std::string makePrefix(const Location& location);
 
 private:
 	bool showTimestamp = true;

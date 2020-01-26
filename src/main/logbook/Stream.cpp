@@ -7,7 +7,7 @@ LICENSE, which you should have received as part of this distribution.
 
 #include <logbook/Stream.h>
 #include <logbook/Logger.h>
-#include <logbook/Id.h>
+#include <logbook/Location.h>
 
 namespace logbook {
 
@@ -35,7 +35,7 @@ Writer Stream::operator()(void* object, const char* function, const char* file, 
 }
 
 Writer Stream::getWriter(void* object, const char* function, const char* file, unsigned int lineNo) {
-	std::pair<Id*, std::reference_wrapper<std::ostream>> rv = Logger::pushCurrent(Id(level, object, typeName, function, file, lineNo, std::this_thread::get_id()), &enabled);
+	std::pair<Location*, std::reference_wrapper<std::ostream>> rv = Logger::pushCurrent(Location(level, object, typeName, function, file, lineNo, std::this_thread::get_id()), &enabled);
 	return Writer(rv.first, rv.second.get());
 }
 

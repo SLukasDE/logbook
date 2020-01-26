@@ -11,16 +11,16 @@ LICENSE, which you should have received as part of this distribution.
 
 namespace logbook {
 
-Writer::Writer(Id* aId, std::ostream& aOStream)
+Writer::Writer(Location* aLocation, std::ostream& aOStream)
 : doUnlock(true),
-  id(aId),
+  location(aLocation),
   oStream(aOStream)
 {
 }
 
 Writer::Writer(Writer&& writer)
 : doUnlock(writer.doUnlock),
-  id(writer.id),
+  location(writer.location),
   oStream(writer.oStream)
 {
 	writer.doUnlock = false;
@@ -30,11 +30,11 @@ Writer::~Writer() {
     if(doUnlock) {
     	oStream.flush();
 
-    	if(id == nullptr) {
+    	if(location == nullptr) {
             Logger::popCurrent();
     	}
     	else {
-            Logger::popCurrent(static_cast<std::stringstream&>(oStream), *id);
+            Logger::popCurrent(static_cast<std::stringstream&>(oStream), *location);
     	}
     }
 }

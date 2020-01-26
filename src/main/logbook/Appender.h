@@ -9,7 +9,7 @@ LICENSE, which you should have received as part of this distribution.
 #define LOGBOOK_APPENDER_H_
 
 #include <logbook/Logger.h>
-#include <logbook/Id.h>
+#include <logbook/Location.h>
 #include <logbook/Layout.h>
 #include <cstddef>
 
@@ -42,8 +42,8 @@ public:
 	}
 
 protected:
-	virtual void flushNewLine(const Id& id, bool enabled) = 0;
-	virtual void write(const Id& id, bool enabled, const char* ptr, std::size_t size) = 0;
+	virtual void flushNewLine(const Location& location, bool enabled) = 0;
+	virtual void write(const Location& location, bool enabled, const char* ptr, std::size_t size) = 0;
 
 private:
 	Layout layout;

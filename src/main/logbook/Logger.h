@@ -9,7 +9,7 @@ LICENSE, which you should have received as part of this distribution.
 #define LOGBOOK_LOGGER_H_
 
 #include <logbook/Level.h>
-#include <logbook/Id.h>
+#include <logbook/Location.h>
 #include <logbook/Stream.h>
 #include <logbook/Buffer.h>
 #include <logbook/Internal.h>
@@ -69,12 +69,12 @@ public:
 private:
 	static unsigned int getThreadNo(std::thread::id threadId);
 
-	static std::pair<Id*, std::reference_wrapper<std::ostream>> pushCurrent(Id id, bool** enabled);
+	static std::pair<Location*, std::reference_wrapper<std::ostream>> pushCurrent(Location location, bool** enabled);
 	static void popCurrent();
-	static void popCurrent(std::stringstream& sstream, Id& id);
+	static void popCurrent(std::stringstream& sstream, Location& location);
 
 	// createEnabledSwitch is only called indirectly by StreamReal::getStreamWriter where mutex gets locked
-	static bool* createEnabledSwitch(const char* typeName, Level level);
+	static bool& createEnabledSwitch(const char* typeName, Level level);
 /*
 	static void setCurrent(Id id, bool enabled);
 	static std::mutex& getMutex();

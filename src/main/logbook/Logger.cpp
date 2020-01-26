@@ -76,15 +76,15 @@ void EnabledLevel::setLogLevel(Level logLevel) {
 std::recursive_mutex loggerMutex;
 std::unordered_map<std::thread::id, unsigned int> threadIdToNo;
 std::vector<std::reference_wrapper<Appender>> appenders;
-std::vector<Id> currentStack;
-Id current(Level::SILENT, nullptr, nullptr, nullptr, nullptr, 0, std::this_thread::get_id());
+//std::vector<Location> currentStack;
+Location current(Level::SILENT, nullptr, nullptr, nullptr, nullptr, 0, std::this_thread::get_id());
 //bool currentEnabled = true;
 //Id currentId(Level::SILENT, nullptr, nullptr, nullptr, nullptr, 0, std::this_thread::get_id());
 
 std::mutex configMutex;
 std::map<std::string, Level> typeNameToLogLevel; // type name with optional ending wildcard '*' -> logLevel, wildcard only allowed at the end!
 std::map<std::string, EnabledLevel> typeNameToEnabledLevel; // type name without wildcard -> EnabledLevel
-std::vector<std::pair<Id*, std::stringstream*>> unblockedBuffer;
+std::vector<std::pair<Location*, std::stringstream*>> unblockedBuffer;
 
 bool isUnblocked = true;
 Level defaultLogLevel = Level::INFO;
@@ -217,13 +217,11 @@ void Logger::addAppender(Appender& appender) {
 }
 
 std::vector<std::reference_wrapper<Appender>> Logger::getAppenders() {
+    std::lock_guard<std::recursive_mutex> loggerLock(loggerMutex);
 	std::vector<std::reference_wrapper<Appender>> rv;
 
-	{
-	    std::lock_guard<std::recursive_mutex> loggerLock(loggerMutex);
-		for(auto& appender : appenders) {
-			rv.push_back(appender);
-		}
+	for(auto& appender : appenders) {
+		rv.push_back(appender);
 	}
 
 	return rv;
@@ -244,9 +242,10 @@ unsigned int Logger::getThreadNo(std::thread::id threadId) {
 	return id;
 }
 
-std::pair<Id*, std::reference_wrapper<std::ostream>> Logger::pushCurrent(Id id, bool** enabled) {
+std::pair<Location*, std::reference_wrapper<std::ostream>> Logger::pushCurrent(Location location, bool** enabled) {
+	// check if pointer has been set already. So we call this expensive function only once.
 	if((*enabled) == nullptr) {
-	    *enabled = Logger::createEnabledSwitch(id.typeName, id.level);
+	    *enabled = &Logger::createEnabledSwitch(location.typeName, location.level);
 	}
 
 	bool isOwner = true;
@@ -257,58 +256,71 @@ std::pair<Id*, std::reference_wrapper<std::ostream>> Logger::pushCurrent(Id id, 
 		loggerMutex.lock();
 	}
 
+	/* there is no other thread using the logger right now */
 	if(isOwner) {
-		if(current == id) {
+		if(current == location) {
 			return std::make_pair(nullptr, std::ref(oStream));
 		}
 
 		flushNewline();
 
-		currentStack.push_back(std::move(current));
+//		currentStack.push_back(std::move(current));
 
 		// to create a number, if not done before - important for later translation of same threadId again, e.g. for appender MemBuffer
-		getThreadNo(id.threadId);
+		getThreadNo(location.threadId);
 
-		current = std::move(id);
+		current = std::move(location);
 		current.enabled = **enabled;
 
 		return std::make_pair(nullptr, std::ref(oStream));
 	}
 
-	Id* idPtr = new Id(std::move(id));
-	idPtr->enabled = **enabled;
-    return std::make_pair(idPtr, std::ref(static_cast<std::ostream&>(*new std::stringstream)));
+	/* return a std::stringstream if there is another thread using the real output */
+	Location* locationPtr = new Location(std::move(location));
+	locationPtr->enabled = **enabled;
+    return std::make_pair(locationPtr, std::ref(static_cast<std::ostream&>(*new std::stringstream)));
 }
 
+/* This function is called if corresponding call of pushCurrent
+ * returned a nullptr indicating that a thread is using the output directly.
+ */
 void Logger::popCurrent() {
 	flushBuffer();
 
-	current = std::move(currentStack.back());
-	currentStack.pop_back();
+//	current = std::move(currentStack.back());
+//	currentStack.pop_back();
 
-	flushNewline();
+//	flushNewline();
 	loggerMutex.unlock();
 }
 
-void Logger::popCurrent(std::stringstream& sstream, Id& id) {
+/* This function is called if corresponding call of pushCurrent
+ * returned a pointer to a std::stringstream buffer
+ * instead of a nullptr indicating that a thread is using the output directly
+ */
+void Logger::popCurrent(std::stringstream& sstream, Location& location) {
+	/* first be push the stringstream buffer to a queue */
 	{
 	    std::lock_guard<std::mutex> configLock(configMutex);
-		unblockedBuffer.push_back(std::make_pair(&id, &sstream));
+		unblockedBuffer.push_back(std::make_pair(&location, &sstream));
 	}
 
 	// now let's try to get the lock
 	bool isOwner = loggerMutex.try_lock();
-	if(isOwner == false) {
-		return;
+
+	/* if direct output is not in use anymore we can flush out output.
+	 * first we push "current" to currentStack and
+	 * second we call popCurrent() - to flush the buffer and
+	 * to move current back from currentStack and to unlock mutex again.
+	 */
+	if(isOwner) {
+//		currentStack.push_back(std::move(current));
+		popCurrent();
 	}
-
-	currentStack.push_back(std::move(current));
-
-	popCurrent();
 }
 
 // only called indirectly by StreamReam::createWriters. Mutex is locked already
-bool* Logger::createEnabledSwitch(const char* typeName, Level level) {
+bool& Logger::createEnabledSwitch(const char* typeName, Level level) {
 	// corrected typeName and store corrected version to myTypeName
     std::string myTypeName = removeStartingCharactersIfMatch(typeName, [](char c) { return c == ':'; });
 
@@ -321,29 +333,30 @@ bool* Logger::createEnabledSwitch(const char* typeName, Level level) {
 
     switch(level) {
     case Level::TRACE:
-    	return &enabledLevel.trace;
+    	return enabledLevel.trace;
     case Level::DEBUG:
-    	return &enabledLevel.debug;
+    	return enabledLevel.debug;
     case Level::INFO:
-    	return &enabledLevel.info;
+    	return enabledLevel.info;
     case Level::WARN:
-    	return &enabledLevel.warn;
-    case Level::ERROR:
-    	return &enabledLevel.error;
+    	return enabledLevel.warn;
+    //case Level::ERROR:
     default:
     	break;
     }
-	return nullptr;
+	return enabledLevel.error;
 }
 
 void Logger::flushBuffer() {
     std::lock_guard<std::mutex> configLock(configMutex);
 
 	for(const auto& item : unblockedBuffer) {
-		Logger::flushNewline();
-
 		// to create a number, if not done before - important for later translation of same threadId again, e.g. for appender MemBuffer
 		Logger::getThreadNo(item.first->threadId);
+
+		if(current != *item.first) {
+			flushNewline();
+		}
 
 		current = std::move(*item.first);
 		current.enabled = item.first->enabled;

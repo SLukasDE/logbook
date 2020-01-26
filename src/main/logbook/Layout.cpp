@@ -79,7 +79,7 @@ std::string formatThreadNo(unsigned int threadNo) {
 	return formatStrToSize(std::to_string(threadNo),true, 3);
 }
 
-std::string formatObject(void* object) {
+std::string formatObject(const void* object) {
 	char buffer[20];
 	std::snprintf(buffer, 20, "%p", object);
 	return formatStrToSize(buffer, false, 18);
@@ -158,35 +158,35 @@ void Layout::setShowThreadNo(bool showThreadNo) {
 	this->showThreadNo = showThreadNo;
 }
 
-std::string Layout::makePrefix(const Id& id) {
+std::string Layout::makePrefix(const Location& location) {
 	std::string rv;
 
 	if(showTimestamp) {
-		rv += formatTimestamp(id.timestamp);
+		rv += formatTimestamp(location.timestamp);
 	}
 
 	if(showLevel) {
-		rv += formatLevel(id.level);
+		rv += formatLevel(location.level);
 	}
 
     rv += "(";
 	if(showTypeName) {
-	    rv += formatTypeName(id.typeName);
+	    rv += formatTypeName(location.typeName);
 	}
 	if(showThreadNo) {
-		rv += "-" + formatThreadNo(Logger::getThreadNo(id.threadId));
+		rv += "-" + formatThreadNo(Logger::getThreadNo(location.threadId));
 	}
 	if(showAddress) {
-		rv += " @ " + formatObject(id.object);
+		rv += " @ " + formatObject(location.object);
 	}
 	if(showFunction) {
-		rv += "|" + formatStrToSize(makeString(id.function), false, 20);
+		rv += "|" + formatStrToSize(makeString(location.function), false, 20);
 	}
 	if(showFile) {
-		rv += "|" + formatStrToSize(makeString(id.file), false, 20);
+		rv += "|" + formatStrToSize(makeString(location.file), false, 20);
 	}
 	if(showLineNo) {
-		rv += "|" + formatLineNo(id.line);
+		rv += "|" + formatLineNo(location.line);
 	}
 	rv += "): ";
 

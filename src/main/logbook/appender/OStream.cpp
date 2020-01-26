@@ -28,7 +28,7 @@ OStream::OStream(std::ostream& oStreamTrace,
 {
 }
 
-void OStream::flushNewLine(const Id& id, bool enabled) {
+void OStream::flushNewLine(const Location& location, bool enabled) {
 	switch(getRecordLevel()) {
 	case RecordLevel::OFF:
 		return;
@@ -41,7 +41,7 @@ void OStream::flushNewLine(const Id& id, bool enabled) {
 		break;
 	}
 
-	std::ostream& oStream = getOStream(id.level);
+	std::ostream& oStream = getOStream(location.level);
 	if(!isFirstCharacterInLine) {
 		oStream << "\n";
 		isFirstCharacterInLine = true;
@@ -49,7 +49,7 @@ void OStream::flushNewLine(const Id& id, bool enabled) {
 	oStream.flush();
 }
 
-void OStream::write(const Id& id, bool enabled, const char* ptr, std::size_t size) {
+void OStream::write(const Location& location, bool enabled, const char* ptr, std::size_t size) {
 	switch(getRecordLevel()) {
 	case RecordLevel::OFF:
 		return;
@@ -62,12 +62,12 @@ void OStream::write(const Id& id, bool enabled, const char* ptr, std::size_t siz
 		break;
 	}
 
-	std::ostream& oStream = getOStream(id.level);
+	std::ostream& oStream = getOStream(location.level);
 	const char* begin = ptr;
 
 	for(auto iter = ptr; iter != &ptr[size]; ++iter) {
 		if(isFirstCharacterInLine) {
-			oStream << getLayout().makePrefix(id);
+			oStream << getLayout().makePrefix(location);
 			isFirstCharacterInLine = false;
 		}
 

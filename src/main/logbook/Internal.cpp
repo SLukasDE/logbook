@@ -14,16 +14,20 @@ unsigned int Internal::getThreadNo(std::thread::id threadId) {
 	return Logger::getThreadNo(threadId);
 }
 
-std::pair<Id*, std::reference_wrapper<std::ostream>> Internal::pushCurrent(Id id, bool** enabled) {
-	return Logger::pushCurrent(id, enabled);
+bool& Internal::isEnabled(const char* typeName, Level level) {
+	return Logger::createEnabledSwitch(typeName, level);
+}
+
+std::pair<Location*, std::reference_wrapper<std::ostream>> Internal::pushCurrent(Location location, bool** enabled) {
+	return Logger::pushCurrent(location, enabled);
 }
 
 void Internal::popCurrent() {
 	Logger::popCurrent();
 }
 
-void Internal::popCurrent(std::stringstream& sstream, Id& id) {
-	Logger::popCurrent(sstream, id);
+void Internal::popCurrent(std::stringstream& sstream, Location& location) {
+	Logger::popCurrent(sstream, location);
 }
 
 } /* namespace logbook */

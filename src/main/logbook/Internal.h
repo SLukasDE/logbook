@@ -8,7 +8,8 @@ LICENSE, which you should have received as part of this distribution.
 #ifndef LOGBOOK_INTERNAL_H_
 #define LOGBOOK_INTERNAL_H_
 
-#include <logbook/Id.h>
+#include <logbook/Location.h>
+#include <logbook/Level.h>
 #include <utility>
 #include <ostream>
 #include <sstream>
@@ -20,9 +21,10 @@ namespace logbook {
 class Internal {
 public:
 	static unsigned int getThreadNo(std::thread::id threadId);
-	static std::pair<Id*, std::reference_wrapper<std::ostream>> pushCurrent(Id id, bool** enabled);
+	static bool& isEnabled(const char* typeName, Level level);
+	static std::pair<Location*, std::reference_wrapper<std::ostream>> pushCurrent(Location location, bool** enabled);
 	static void popCurrent();
-	static void popCurrent(std::stringstream& sstream, Id& id);
+	static void popCurrent(std::stringstream& sstream, Location& location);
 
 private:
 	Internal() = delete;
