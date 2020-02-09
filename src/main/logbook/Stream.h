@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2019, Sven Lukas
+Copyright (c) 2019, 2020, Sven Lukas
 
 Logbook is distributed under BSD-style license as described in the file
 LICENSE, which you should have received as part of this distribution.
@@ -10,6 +10,7 @@ LICENSE, which you should have received as part of this distribution.
 
 #include <logbook/Level.h>
 #include <logbook/Writer.h>
+#include <logbook/Logbook.h>
 
 namespace logbook {
 
@@ -24,17 +25,18 @@ public:
 
 	template<typename T>
 	inline Writer operator<<(const T& t) {
-        Writer writer(getWriter(nullptr, nullptr, nullptr, 0));
-        writer << t;
-        return writer;
+		std::unique_ptr<Writer> writerPtr(createWriter(Location(level, nullptr, typeName, nullptr, nullptr, 0, std::this_thread::get_id())));
+		if(writerPtr) {
+	    	Writer writer(std::move(*writerPtr));
+	        writer << t;
+	        return writer;
+		}
+    	return Writer();
 	}
 
     Writer operator<<(std::ostream& (*pf)(std::ostream&));
 
 private:
-    Writer getWriter(void* object, const char* function, const char* file, unsigned int lineNo);
-
-    bool* enabled = nullptr;
     const char* typeName;
 	Level level;
 };

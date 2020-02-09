@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2019, Sven Lukas
+Copyright (c) 2019, 2020, Sven Lukas
 
 Logbook is distributed under BSD-style license as described in the file
 LICENSE, which you should have received as part of this distribution.
@@ -8,45 +8,36 @@ LICENSE, which you should have received as part of this distribution.
 #ifndef LOGBOOK_APPENDER_H_
 #define LOGBOOK_APPENDER_H_
 
-#include <logbook/Logger.h>
-#include <logbook/Location.h>
 #include <logbook/Layout.h>
 #include <cstddef>
 
 namespace logbook {
 
-class Logger;
+class Location;
 
 class Appender {
-friend class Logger;
+friend class Logbook;
 public:
 	enum class RecordLevel {
 		ALL, SELECTED, OFF
 	};
 
-	Appender() = default;
-	virtual ~Appender() = default;
+	Appender();
+	virtual ~Appender();
 
-	inline Layout& getLayout() {
-		return layout;
-	}
+	void setLayout(const Layout* aLayout);
+	const Layout* getLayout() const;
 
-	/* method is NOT thread-safe */
-	inline RecordLevel getRecordLevel() const {
-		return recordLevel;
-	}
-
-	/* method is NOT thread-safe */
-	inline void setRecordLevel(RecordLevel recordLevel = RecordLevel::SELECTED) {
-		this->recordLevel = recordLevel;
-	}
+	/* Both methods are NOT thread-safe */
+	RecordLevel getRecordLevel() const;
+	void setRecordLevel(RecordLevel aRecordLevel = RecordLevel::SELECTED);
 
 protected:
-	virtual void flushNewLine(const Location& location, bool enabled) = 0;
-	virtual void write(const Location& location, bool enabled, const char* ptr, std::size_t size) = 0;
+	virtual void flush() = 0;
+	virtual void write(const Location& location, const char* ptr, std::size_t size) = 0;
 
 private:
-	Layout layout;
+	const Layout* layout = nullptr;
 	RecordLevel recordLevel = RecordLevel::SELECTED;
 };
 

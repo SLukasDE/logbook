@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2019, Sven Lukas
+Copyright (c) 2019, 2020, Sven Lukas
 
 Logbook is distributed under BSD-style license as described in the file
 LICENSE, which you should have received as part of this distribution.
@@ -26,18 +26,19 @@ public:
 	std::ostream& oStreamError);
 
 protected:
-	void flushNewLine(const Location& location, bool enabled) override;
-	void write(const Location& location, bool enabled, const char* ptr, std::size_t size) override;
+	void flush() override;
+	void write(const Location& location, const char* ptr, std::size_t size) override;
 
 private:
-	std::ostream& getOStream(Level level);
-
 	bool isFirstCharacterInLine = true;
+	Location lastLocation;
 	std::ostream& oStreamTrace;
 	std::ostream& oStreamDebug;
 	std::ostream& oStreamInfo;
 	std::ostream& oStreamWarn;
 	std::ostream& oStreamError;
+
+	std::ostream& getOStream(Level level);
 };
 
 } /* namespace appender */

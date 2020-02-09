@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2019, Sven Lukas
+Copyright (c) 2019, 2020, Sven Lukas
 
 Logbook is distributed under BSD-style license as described in the file
 LICENSE, which you should have received as part of this distribution.
@@ -15,6 +15,8 @@ namespace logbook {
 
 class Writer {
 friend class Stream;
+friend class Logbook;
+
 public:
 	Writer(const Writer&) = delete;
 	~Writer();
@@ -24,19 +26,29 @@ public:
 
 	template<typename T2>
 	inline Writer& operator<<(const T2& t2) {
-		oStream << t2;
+		if(oStream) {
+			(*oStream) << t2;
+		}
 		return *this;
 	}
 
 	Writer& operator<<(std::ostream& (*pf)(std::ostream&));
 
+    std::ostream* getOStream() {
+    	return oStream;
+    }
+
 private:
-	Writer(Location* location, std::ostream& oStream);
 	Writer(Writer&& streamWriter);
 
-    bool doUnlock;
+	// just for Logbook::createWriter()
+	Writer(Location* location, std::ostream* oStream);
+
+	// just for Stream::operator<<(...) and Stream::operator()(...)
+	Writer();
+
     Location* location;
-    std::ostream& oStream;
+    std::ostream* oStream;
 };
 
 } /* namespace logbook */

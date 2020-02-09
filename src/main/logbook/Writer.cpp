@@ -1,46 +1,47 @@
 /*
-Copyright (c) 2019, Sven Lukas
+Copyright (c) 2019, 2020, Sven Lukas
 
 Logbook is distributed under BSD-style license as described in the file
 LICENSE, which you should have received as part of this distribution.
 */
 
 #include <logbook/Writer.h>
-#include <logbook/Logger.h>
+#include <logbook/Logbook.h>
 #include <mutex>
 
 namespace logbook {
 
-Writer::Writer(Location* aLocation, std::ostream& aOStream)
-: doUnlock(true),
-  location(aLocation),
-  oStream(aOStream)
-{
-}
+/* Defined in Logbook.cpp */
+void releaseWriter(Writer& writer);
 
 Writer::Writer(Writer&& writer)
-: doUnlock(writer.doUnlock),
-  location(writer.location),
+: location(writer.location),
   oStream(writer.oStream)
 {
-	writer.doUnlock = false;
+	writer.oStream = nullptr;
 }
 
-Writer::~Writer() {
-    if(doUnlock) {
-    	oStream.flush();
+Writer::Writer(Location* aLocation, std::ostream* aOStream)
+: location(aLocation),
+  oStream(aOStream)
+{ }
 
-    	if(location == nullptr) {
-            Logger::popCurrent();
-    	}
-    	else {
-            Logger::popCurrent(static_cast<std::stringstream&>(oStream), *location);
-    	}
+Writer::Writer()
+: location(nullptr),
+  oStream(nullptr)
+{ }
+
+Writer::~Writer() {
+    if(oStream) {
+    	oStream->flush();
+        releaseWriter(*this);
     }
 }
 
 Writer& Writer::operator<<(std::ostream& (*pf)(std::ostream&)) {
-	oStream << pf;
+    if(oStream) {
+    	(*oStream) << pf;
+    }
     return *this;
 }
 
