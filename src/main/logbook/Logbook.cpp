@@ -9,6 +9,7 @@ LICENSE, which you should have received as part of this distribution.
 #include <logbook/Appender.h>
 #include <logbook/Location.h>
 #include <logbook/StreamBuffer.h>
+
 #include <map>
 #include <vector>
 #include <unordered_set>
