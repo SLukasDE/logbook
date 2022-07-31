@@ -13,9 +13,6 @@ namespace logbook {
 /* Defined in Logbook.cpp */
 void write(const char* ptr, std::size_t size);
 
-/* Defined in Logbook.cpp */
-void flush();
-
 StreamBuffer::StreamBuffer(std::size_t aBufferSize)
 : std::streambuf(),
   bufferSize(aBufferSize),
@@ -60,7 +57,6 @@ int StreamBuffer::sync() {
         if (currentChar == '\n') {
             std::ptrdiff_t n = currentStr - beginStr;
             logbook::write(beginStr, n);
-            logbook::flush();
             beginStr = currentStr;
         }
     } while(currentStr != endStr);

@@ -486,12 +486,6 @@ bool isLoggingEnabled(const char* typeName, Level level) {
 	return false;
 }
 
-void flush() {
-	if(getLogbook()) {
-		getLogbook()->flush();
-	}
-}
-
 void write(const char* ptr, std::size_t size) {
 	if(getLogbook()) {
 		getLogbook()->write(ptr, size);
