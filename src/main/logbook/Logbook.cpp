@@ -10,14 +10,14 @@ LICENSE, which you should have received as part of this distribution.
 #include <logbook/Location.h>
 #include <logbook/StreamBuffer.h>
 
+#include <functional> //template< class T > struct hash<T*>; std::reference_wrapper
 #include <map>
-#include <vector>
+#include <mutex>
+#include <sstream>
 #include <unordered_set>
 #include <unordered_map>
 #include <utility> // std::pair
-#include <functional> //template< class T > struct hash<T*>; std::reference_wrapper
-#include <mutex>
-#include <sstream>
+#include <vector>
 
 namespace logbook {
 
