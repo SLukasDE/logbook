@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2019, 2020, Sven Lukas
+Copyright (c) 2019-2023 Sven Lukas
 
 Logbook is distributed under BSD-style license as described in the file
 LICENSE, which you should have received as part of this distribution.
@@ -16,6 +16,7 @@ LICENSE, which you should have received as part of this distribution.
 #include <thread>
 
 namespace logbook {
+inline namespace v0_4 {
 
 // NOT thread save - call it at the beginning if needed. Default is already "true"
 // unblocked behavior makes other threads not waiting on logging, while current thread is writing to logger already.
@@ -40,6 +41,7 @@ bool isLoggingEnabled(const char* typeName, Level level);
 class Location;
 std::unique_ptr<Writer> createWriter(const Location& location);
 
+} /* inline namespace v0_4 */
 } /* namespace logbook */
 
 #endif /* LOGBOOK_LOGBOOK_H_ */

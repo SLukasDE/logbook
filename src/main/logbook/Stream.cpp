@@ -1,16 +1,16 @@
 /*
-Copyright (c) 2019, 2020, Sven Lukas
+Copyright (c) 2019-2023 Sven Lukas
 
 Logbook is distributed under BSD-style license as described in the file
 LICENSE, which you should have received as part of this distribution.
 */
 
 #include <logbook/Stream.h>
-//#include <logbook/Location.h>
 
 #include <iostream>
 
 namespace logbook {
+inline namespace v0_4 {
 
 Stream::Stream(const char* typeName, Level ll)
 : typeName(typeName),
@@ -54,4 +54,5 @@ Writer Stream::operator()(void* object, const char* function, const char* file, 
 	return Writer();
 }
 
+} /* inline namespace v0_4 */
 } /* namespace logbook */

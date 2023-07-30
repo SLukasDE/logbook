@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2019, 2020, Sven Lukas
+Copyright (c) 2019-2023 Sven Lukas
 
 Logbook is distributed under BSD-style license as described in the file
 LICENSE, which you should have received as part of this distribution.
@@ -13,6 +13,7 @@ LICENSE, which you should have received as part of this distribution.
 #include <functional>
 
 namespace logbook {
+inline namespace v0_4 {
 
 class StreamBuffer : public std::streambuf {
 public:
@@ -26,6 +27,7 @@ private:
     std::vector<char> buffer;
 };
 
+} /* inline namespace v0_4 */
 } /* namespace logbook */
 
 #endif /* LOGBOOK_STREAMBUFFER_H_ */

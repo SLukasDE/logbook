@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2019, 2020, Sven Lukas
+Copyright (c) 2019-2023 Sven Lukas
 
 Logbook is distributed under BSD-style license as described in the file
 LICENSE, which you should have received as part of this distribution.
@@ -8,6 +8,7 @@ LICENSE, which you should have received as part of this distribution.
 #include <logbook/appender/MemBuffer.h>
 
 namespace logbook {
+inline namespace v0_4 {
 namespace appender {
 
 MemBuffer::MemBuffer(std::size_t maxRows, std::size_t maxColumns)
@@ -100,4 +101,5 @@ void MemBuffer::newline() {
 }
 
 } /* namespace appender */
+} /* inline namespace v0_4 */
 } /* namespace logbook */

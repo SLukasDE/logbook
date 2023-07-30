@@ -3,7 +3,7 @@
 
 #include <logbook/Logger.h>
 
-namespace logbook {
+inline namespace v0_4 {
 namespace examples {
 
 class Example03 {
@@ -20,6 +20,6 @@ private:
 void example03();
 
 } /* namespace examples */
-} /* namespace logbook */
+} /* inline namespace v0_4 */
 
 #endif /* LOGBOOK_EXAMPLES_EXAMPLE03_H_ */

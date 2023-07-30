@@ -1,7 +1,7 @@
 #include <logbook/examples/Example01.h>
 #include <logbook/Logger.h>
 
-namespace logbook {
+inline namespace v0_4 {
 namespace examples {
 
 void example01() {
@@ -17,4 +17,4 @@ void example01() {
 }
 
 } /* namespace examples */
-} /* namespace logbook */
+} /* inline namespace v0_4 */

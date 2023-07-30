@@ -1,7 +1,7 @@
 #include <logbook/examples/Example03.h>
 #include <logbook/appender/OStream.h>
 
-namespace logbook {
+inline namespace v0_4 {
 namespace examples {
 
 namespace { /* anonymous namespace */
@@ -78,4 +78,4 @@ void example03() {
 }
 
 } /* namespace examples */
-} /* namespace logbook */
+} /* inline namespace v0_4 */

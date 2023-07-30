@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2019, 2020, Sven Lukas
+Copyright (c) 2019-2023 Sven Lukas
 
 Logbook is distributed under BSD-style license as described in the file
 LICENSE, which you should have received as part of this distribution.
@@ -12,6 +12,7 @@ LICENSE, which you should have received as part of this distribution.
 #include <ctime>
 
 namespace logbook {
+inline namespace v0_4 {
 namespace layout {
 
 namespace {
@@ -192,4 +193,5 @@ void Default::setShowThreadNo(bool aShowThreadNo) {
 }
 
 } /* namespace layout */
+} /* inline namespace v0_4 */
 } /* namespace logbook */

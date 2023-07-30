@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 
-namespace logbook {
+inline namespace v0_4 {
 namespace examples {
 
 namespace {
@@ -53,4 +53,4 @@ void loggerReplay() {
 
 
 } /* namespace examples */
-} /* namespace logbook */
+} /* inline namespace v0_4 */

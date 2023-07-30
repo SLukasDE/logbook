@@ -1,7 +1,7 @@
 #include <logbook/examples/Example04.h>
 #include <exception>
 
-namespace logbook {
+inline namespace v0_4 {
 namespace examples {
 
 float Example04::divide(float a, float b) {
@@ -41,4 +41,4 @@ void example04() {
 }
 
 } /* namespace examples */
-} /* namespace logbook */
+} /* inline namespace v0_4 */

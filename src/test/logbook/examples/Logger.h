@@ -3,7 +3,7 @@
 
 #include <logbook/Logger.h>
 
-namespace logbook {
+inline namespace v0_4 {
 namespace examples {
 
 extern logbook::Logger logger;
@@ -11,6 +11,6 @@ void loggerInitialize();
 void loggerReplay();
 
 } /* namespace examples */
-} /* namespace logbook */
+} /* inline namespace v0_4 */
 
 #endif /* LOGBOOK_EXAMPLES_LOGGER_H_ */

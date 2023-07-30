@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2019, 2020, Sven Lukas
+Copyright (c) 2019-2023 Sven Lukas
 
 Logbook is distributed under BSD-style license as described in the file
 LICENSE, which you should have received as part of this distribution.
@@ -14,6 +14,7 @@ LICENSE, which you should have received as part of this distribution.
 #include <ctime>
 
 namespace logbook {
+inline namespace v0_4 {
 
 struct Location {
 	Location() = default;
@@ -70,6 +71,7 @@ struct Location {
 	bool enabled = true;
 };
 
+} /* inline namespace v0_4 */
 } /* namespace logbook */
 
 #endif /* LOGBOOK_LOCATION_H_ */

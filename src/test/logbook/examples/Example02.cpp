@@ -5,7 +5,7 @@
 #include <iostream>
 
 
-namespace logbook {
+inline namespace v0_4 {
 namespace examples {
 
 namespace { /* anonymous namespace */
@@ -51,4 +51,4 @@ void example02() {
 }
 
 } /* namespace examples */
-} /* namespace logbook */
+} /* inline namespace v0_4 */
