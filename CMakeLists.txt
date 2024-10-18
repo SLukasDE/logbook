@@ -20,6 +20,7 @@ endif ()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 option(COMPILE_UNITTESTS "Weather to compile unittests" ON)
+option(BUILD_SHARED_LIBS "Weather to compile shared libs" ON)
 
 add_subdirectory(src/main)
 
