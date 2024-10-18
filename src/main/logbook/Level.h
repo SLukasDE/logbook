@@ -12,12 +12,12 @@ namespace logbook {
 inline namespace v0_4 {
 
 enum class Level {
-	TRACE,
-	DEBUG,
-	INFO,
-	WARN,
-	ERROR,
-	SILENT
+	trace,
+	debug,
+	info,
+	warn,
+	error,
+	silent
 };
 
 } /* inline namespace v0_4 */

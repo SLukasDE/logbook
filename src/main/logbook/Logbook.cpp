@@ -33,42 +33,42 @@ struct EnabledLevel {
 
 	void setLogLevel(Level logLevel) {
 		switch(logLevel) {
-		case Level::TRACE:
+		case Level::trace:
 			trace = true;
 			debug = true;
 			info = true;
 			warn = true;
 			error = true;
 			break;
-		case Level::DEBUG:
+		case Level::debug:
 			trace = false;
 			debug = true;
 			info = true;
 			warn = true;
 			error = true;
 			break;
-		case Level::INFO:
+		case Level::info:
 			trace = false;
 			debug = false;
 			info = true;
 			warn = true;
 			error = true;
 			break;
-		case Level::WARN:
+		case Level::warn:
 			trace = false;
 			debug = false;
 			info = false;
 			warn = true;
 			error = true;
 			break;
-		case Level::ERROR:
+		case Level::error:
 			trace = false;
 			debug = false;
 			info = false;
 			warn = false;
 			error = true;
 			break;
-		case Level::SILENT:
+		case Level::silent:
 			trace = false;
 			debug = false;
 			info = false;
@@ -123,7 +123,7 @@ public:
 	Logbook()
 	: streamBuffer(1000),
 	  oStream(&streamBuffer),
-	  currentLocation(Level::SILENT, nullptr, nullptr, nullptr, nullptr, 0, std::this_thread::get_id())
+	  currentLocation(Level::silent, nullptr, nullptr, nullptr, nullptr, 0, std::this_thread::get_id())
 	{ }
 
 	~Logbook() {
@@ -164,7 +164,7 @@ public:
 	    }
 
 	    /* reset currentLocation */
-	    currentLocation = Location(Level::SILENT, nullptr, nullptr, nullptr, nullptr, 0, std::this_thread::get_id());
+	    currentLocation = Location(Level::silent, nullptr, nullptr, nullptr, nullptr, 0, std::this_thread::get_id());
 	}
 
 	// thread safe, quaranteed by loggerMutex
@@ -269,15 +269,15 @@ public:
 	    enabledLevel.setLogLevel(findMostSpecificLevelEntryByTypeName(myTypeName));
 
 	    switch(level) {
-	    case Level::TRACE:
+	    case Level::trace:
 	    	return enabledLevel.trace;
-	    case Level::DEBUG:
+	    case Level::debug:
 	    	return enabledLevel.debug;
-	    case Level::INFO:
+	    case Level::info:
 	    	return enabledLevel.info;
-	    case Level::WARN:
+	    case Level::warn:
 	    	return enabledLevel.warn;
-	    //case Level::ERROR:
+	    //case Level::error:
 	    default:
 	    	break;
 	    }
@@ -371,7 +371,7 @@ private:
 			return iter->second;
 		}
 
-		constexpr Level defaultLogLevel = Level::INFO;
+		constexpr Level defaultLogLevel = Level::info;
 		typeNameToLogLevel["*"] = defaultLogLevel;
 		return defaultLogLevel;
 	}

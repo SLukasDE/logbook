@@ -44,7 +44,13 @@ std::string formatTimestamp(const std::time_t& timestamp) {
     struct tm timeBuf;
     struct tm* timePtr;
 
+#ifdef _WIN32
+    localtime_s(&timeBuf, &timestamp);
+    timePtr = &timeBuf;
+#else
     timePtr = localtime_r(&timestamp, &timeBuf);
+#endif
+
     sprintf(timeStr, "$ %04d-%02d-%02d %02d:%02d:%02d ",
             timePtr->tm_year + 1900,
             timePtr->tm_mon  + 1,
@@ -57,15 +63,15 @@ std::string formatTimestamp(const std::time_t& timestamp) {
 
 std::string formatLevel(Level level) {
     switch(level) {
-    case Level::TRACE:
+    case Level::trace:
     	return "[TRACE] ";
-    case Level::DEBUG:
+    case Level::debug:
     	return "[DEBUG] ";
-    case Level::INFO:
+    case Level::info:
     	return "[INFO ] ";
-    case Level::WARN:
+    case Level::warn:
     	return"[WARN ] ";
-    case Level::ERROR:
+    case Level::error:
     	return "[ERROR] ";
     default:
         break;

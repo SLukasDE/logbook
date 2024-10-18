@@ -1,6 +1,11 @@
 #include <logbook/examples/Example03.h>
 #include <logbook/appender/OStream.h>
+#include <logbook/layout/Default.h>
+#include <logbook/Logbook.h>
 
+#include <iostream>
+
+namespace logbook {
 inline namespace v0_4 {
 namespace examples {
 
@@ -12,6 +17,7 @@ namespace { /* anonymous namespace */
  * Later you will make it once, near to your main()-function.
  */
 logbook::appender::OStream appenderOstream(std::cout, std::cout, std::cout, std::cout, std::cout);
+logbook::layout::Default defaultLayout;
 
 } /* anonymous namespace */
 
@@ -42,18 +48,20 @@ float Example03::divide(float a, float b) {
 
 void example03() {
 	/* Initialize the logger framework */
-	logbook::Logger::addAppender(appenderOstream);
+	//logbook::Logger::addAppender(appenderOstream);
+//    logbook::addAppender(appenderOstream);
+	appenderOstream.setLayout(&defaultLayout);
 
 	/* each appender has a layout to specify which columns we want to see.
 	 * Let's play a little bit with this feature ... */
-	appenderOstream.getLayout().setShowFile(true);
-	appenderOstream.getLayout().setShowLineNo(true);
-	appenderOstream.getLayout().setShowAddress(true);
-	appenderOstream.getLayout().setShowFunction(true);
-	appenderOstream.getLayout().setShowLevel(true);
-	appenderOstream.getLayout().setShowThreadNo(true);
-	appenderOstream.getLayout().setShowTimestamp(true);
-	appenderOstream.getLayout().setShowTypeName(true);
+	defaultLayout.setShowFile(true);
+	defaultLayout.setShowLineNo(true);
+	defaultLayout.setShowAddress(true);
+	defaultLayout.setShowFunction(true);
+	defaultLayout.setShowLevel(true);
+	defaultLayout.setShowThreadNo(true);
+	defaultLayout.setShowTimestamp(true);
+	defaultLayout.setShowTypeName(true);
 
 	/* Let's do some more initialization...
 	 * Most time we are not interested into all log messages of your application.
@@ -68,8 +76,8 @@ void example03() {
 	 * It is possible to specify for each path and it's sub paths a different log level.
 	 * Here we want to make all log messages silent but for class Example03 we want to get all log messages up to "WARN"-level.
 	 */
-	logbook::Logger::setLevel(logbook::Level::SILENT, "*");
-	logbook::Logger::setLevel(logbook::Level::WARN, "esl::examples::logger::Example03");
+	logbook::setLevel(logbook::Level::silent, "*");
+	logbook::setLevel(logbook::Level::warn, "esl::examples::logger::Example03");
 
 	/* now let's test it! */
 	Example03 e;
@@ -79,3 +87,4 @@ void example03() {
 
 } /* namespace examples */
 } /* inline namespace v0_4 */
+} /* namespace logbook */

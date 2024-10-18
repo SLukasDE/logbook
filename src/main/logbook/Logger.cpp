@@ -12,11 +12,11 @@ namespace logbook {
 inline namespace v0_4 {
 
 Logger::Logger(const char* aTypeName)
-: trace(aTypeName, Level::TRACE),
-  debug(aTypeName, Level::DEBUG),
-  info(aTypeName, Level::INFO),
-  warn(aTypeName, Level::WARN),
-  error(aTypeName, Level::ERROR),
+: trace(aTypeName, Level::trace),
+  debug(aTypeName, Level::debug),
+  info(aTypeName, Level::info),
+  warn(aTypeName, Level::warn),
+  error(aTypeName, Level::error),
   typeName(aTypeName)
 {
 }

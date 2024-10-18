@@ -1,10 +1,12 @@
 #include <logbook/examples/Example02.h>
+#include <logbook/Logbook.h>
 #include <logbook/Logger.h>
 #include <logbook/appender/OStream.h>
 
 #include <iostream>
 
 
+namespace logbook {
 inline namespace v0_4 {
 namespace examples {
 
@@ -20,7 +22,7 @@ logbook::appender::OStream appenderOstream(std::cout, std::cout, std::cout, std:
 
 void simpleInitialize() {
 	/* Now we want to add this appender instance to the logging framework */
-	logbook::Logger::addAppender(appenderOstream);
+	//logbook::addAppender(appenderOstream);
 
 	/* you can add multiple appenders and each appender has settings, but that's enough for now. */
 }
@@ -52,3 +54,4 @@ void example02() {
 
 } /* namespace examples */
 } /* inline namespace v0_4 */
+} /* namespace logbook */

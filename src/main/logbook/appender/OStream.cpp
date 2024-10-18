@@ -95,15 +95,15 @@ void OStream::write(const Location& aLocation, const char* ptr, std::size_t size
 
 std::ostream& OStream::getOStream(Level level) {
 	switch(level) {
-	case Level::TRACE:
+	case Level::trace:
 		return oStreamTrace;
-	case Level::DEBUG:
+	case Level::debug:
 		return oStreamDebug;
-	case Level::INFO:
+	case Level::info:
 		return oStreamInfo;
-	case Level::WARN:
+	case Level::warn:
 		return oStreamWarn;
-	case Level::ERROR:
+	case Level::error:
 		return oStreamError;
 	default:
 		break;

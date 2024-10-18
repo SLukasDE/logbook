@@ -1,6 +1,7 @@
 #include <logbook/examples/Example04.h>
 #include <exception>
 
+namespace logbook {
 inline namespace v0_4 {
 namespace examples {
 
@@ -42,3 +43,4 @@ void example04() {
 
 } /* namespace examples */
 } /* inline namespace v0_4 */
+} /* namespace logbook */

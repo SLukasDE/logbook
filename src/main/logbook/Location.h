@@ -59,7 +59,7 @@ struct Location {
 	}
 
 	std::time_t timestamp = std::time(nullptr);
-	Level level = Level::SILENT;
+	Level level = Level::silent;
 	const void* object = nullptr;
 	const char* typeName = nullptr;
 	const char* function = nullptr;
